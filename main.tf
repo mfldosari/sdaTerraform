@@ -1,23 +1,44 @@
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "4.23.0"
-    }
-  }
+module "resource_group" {
+  source   = "./modules/general/resource_group"
+  rg_name  = var.rg_name
+  location = var.location
 }
 
-provider "azurerm" {
-  features {}
-  subscription_id = "..."
+# Define the network module
+module "network" {
+  source        = "./modules/network"
+  rg_name       = var.rg_name
+  location      = var.location
+  address_space = var.address_space
+  subnet_name   = var.subnet_name
+  subnet_prefixe = var.subnet_prefixe
+  nic_name      = var.nic_name
+  nsg_name = var.nsg_name
+  vnet_name = var.vnet_name
 }
 
-resource "azurerm_resource_group" "sda_main" {
-  name     = "pf-sdaonsite-rg"
-  location = local.resource_location
 
-  tags = merge(local.tags,{
-    name = "tagged name"
-  })
+module "compute" {
+  source        = "./modules/compute"
+  rg_name       = var.rg_name
+  location      = var.location
+  nic_id         = module.network.nic_id
+  admin_username = var.admin_username
+  vm_size = var.vm_size
+  vm_name = var.vm_name
 }
 
+
+module "storage" {
+  source        = "./modules/storage"
+  rg_name       = var.rg_name
+  location      = var.location
+}
+
+module "database" {
+  source        = "./modules/database"
+  rg_name       = var.rg_name
+  location      = var.location
+  db_username = var.db_username
+  db_password = var.db_password
+}

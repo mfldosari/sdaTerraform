@@ -1,0 +1,14 @@
+rg_name        = "tr-ma-chatbot-rg"
+location       = "East US"
+vnet_name      = "tr-vnet"
+subnet_name    = "tr-subnet"
+address_space  = ["10.0.0.0/16"]
+subnet_prefixe  = ["10.0.1.0/24"]
+nsg_name = "tr-chatbot-nsg"
+nic_name = "tr-chatbot-nic"
+vm_name        = "tr-vm"
+vm_size        = "Standard_B1s"
+admin_username     = "azureuser"
+db_username = "postgres"
+#admin_password = "MySecureP@ssw0rd!"
+#ssh_public_key_path = "~/.ssh/id_rsa.pub"  
